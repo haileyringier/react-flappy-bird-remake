@@ -1,0 +1,13 @@
+.canvas{
+  background-color: cornflowerblue;
+}
+.App{
+  text-align: center;
+}
+h1{
+  text-align: center;
+  font-size: 28px;
+  background-color: cornflowerblue;
+  margin-top: 10px;
+  padding: 15px;
+}
