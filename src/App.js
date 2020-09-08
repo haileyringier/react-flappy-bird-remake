@@ -23,7 +23,6 @@ export default class App extends React.Component {
     <div className="App">
       <h1>Flappy Bird in React</h1>
       <Game />
-      <Bird />
     </div>
   );
 }

@@ -1,10 +1,11 @@
 import React from 'react'
+import Bird from './Bird'
 
 export default class Game extends React.Component{
 
     state = {
         gravity: 0.8, 
-        lift: -15,
+        lift: -15,  
         bird: {
             x: 50,
             y: 100,
@@ -20,15 +21,17 @@ export default class Game extends React.Component{
         ctx.fillRect(0, 0, this.refs.canvas.width,
             this.refs.canvas.height)
 
-        ctx.beginPath()
-        ctx.arc(this.state.bird.x, this.state.bird.y, this.state.bird.radius, 0, 2 * Math.PI)
-        // let pat = ctx.createPattern("https://i.gifer.com/origin/39/3933c213d43ed004e381fefdb9ec0605_w200.gif", "repeat")
-        // ctx.fillStyle = pat
-        ctx.fill()
-        ctx.stroke()
-    
-    
-    }
+        // ctx.beginPath()
+        // ctx.arc(this.state.bird.x, this.state.bird.y, this.state.bird.radius, 0, 2 * Math.PI)
+        // ctx.fillStyle = 'red'
+        // ctx.fill()
+        // ctx.stroke()
+        
+        const bird = document.createElement('img')
+        bird.src = 'https://i.gifer.com/origin/39/3933c213d43ed004e381fefdb9ec0605_w200.gif'
+        ctx.drawImage(bird, this.state.bird.x, this.state.bird.y, 100, 100)
+
+    }    
 
     update = () => {
         let newVelocity = (this.state.bird.velocity + this.state.gravity) * 0.9
@@ -67,7 +70,7 @@ export default class Game extends React.Component{
     render(){
         return(
             <div>
-                <canvas ref='canvas' className='canvas' width={450} height={625} />
+                <canvas ref='canvas' className='canvas' width={450} height={625} />      
             </div>
         )
     }
