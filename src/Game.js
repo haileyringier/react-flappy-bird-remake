@@ -2,12 +2,12 @@ import React from 'react'
 import StartButton from './components/StartButton'
 import Timer from './components/Timer'
 
-const initialPipe = {
-            x: 700,
-            y: 475,
-            w: 40,
-            h: 150,
-}
+// const initialPipe = {
+//             x: 700,
+//             y: 475,
+//             w: 40,
+//             h: 150,
+// }
 
 export default class Game extends React.Component{
 
@@ -22,14 +22,13 @@ export default class Game extends React.Component{
             velocity: 0
         },
        pipes: [
-           {
-               x: 550,
-               y: 475,
-               w: 40,
-               h: 150
-
-           }
-       ]
+            {
+            x: 550,
+            y: 475,
+            w: 40,
+            h: 150
+            }
+        ]
     }
 
     draw = () => {
@@ -42,7 +41,6 @@ export default class Game extends React.Component{
         const bird = document.createElement('img')
         bird.src = 'https://i.gifer.com/origin/39/3933c213d43ed004e381fefdb9ec0605_w200.gif'
         ctx.drawImage(bird, this.state.bird.x, this.state.bird.y, 100, 100)
-
     }   
     
     updateBird = () => {
@@ -103,12 +101,24 @@ export default class Game extends React.Component{
         })
     }
 
-    // gameOver = () => {
-    //     if(this.state.bird.x == this.state.pipe.x && this.state.bird.y == this.state.pipe)
-    // }
+    gameOver = () => {
+        this.state.pipes.forEach(pipe => {
+           if(this.state.bird.x + 50 > pipe.x - 20 && this.state.bird.x + 50 < pipe.x + 20 && this.state.bird.y + 50 >= 625 - pipe.h){
+            console.log("gameover") 
+            console.log("pipe:",pipe.x, pipe.y)
+            console.log(this.state.bird.x, this.state.bird.y)  
+            this.setState({gameOn: !this.state.gameOn})
+            const ctx = this.refs.canvas.getContext('2d')
+            ctx.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height)
+            this.setState({pipes: []})
+           }
+        })
+    }
+
     gameRunning = () => {
         setInterval(() => {
             if(this.state.gameOn === true){
+            this.gameOver()
             this.draw()
             this.drawAllPipes()
             this.updateBird()       
@@ -144,7 +154,7 @@ export default class Game extends React.Component{
 
     render(){
         return(
-           <body>
+           <>
             <div className='header-section'>
                 <StartButton clickAction={this.startButtonClick}/>
                 <Timer />
@@ -152,7 +162,7 @@ export default class Game extends React.Component{
                 <div className='game-section'>
                     <canvas ref='canvas' className='canvas' width={700} height={625} />      
             </div>
-            </body>
+            </>
         )
     }
 }
