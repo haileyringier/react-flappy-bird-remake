@@ -2,9 +2,9 @@ import React from 'react'
 
 const initialPipe = {
             x: 700,
-            y: 400,
+            y: 475,
             w: 40,
-            h: 250,
+            h: 150,
 }
 
 export default class Game extends React.Component{
@@ -18,12 +18,6 @@ export default class Game extends React.Component{
             radius: 20,
             velocity: 0
         },
-       pipe: {
-        x: 700,
-        y: 400,
-        w: 40,
-        h: 250  
-       },
        pipes: [
         {
             x: initialPipe.x,
@@ -44,21 +38,9 @@ export default class Game extends React.Component{
         const bird = document.createElement('img')
         bird.src = 'https://i.gifer.com/origin/39/3933c213d43ed004e381fefdb9ec0605_w200.gif'
         ctx.drawImage(bird, this.state.bird.x, this.state.bird.y, 100, 100)
-    }                      
 
-    drawAllPipes = () => {
-        this.state.pipes.forEach(pipe => this.drawPipe(pipe))
-    }
-
-    drawPipe = (pipe) => {
-        const ctx = this.refs.canvas.getContext('2d')
-
-        ctx.beginPath()
-        ctx.strokeStyle = 'green'
-        ctx.rect(pipe.x, pipe.y, pipe.w, pipe.h)
-        ctx.stroke()
-    }
-
+    }   
+    
     updateBird = () => {
         let newVelocity = (this.state.bird.velocity + this.state.gravity) * 0.9
         this.setState({
@@ -77,16 +59,31 @@ export default class Game extends React.Component{
         })
     }
 
+    drawAllPipes = () => {
+        this.state.pipes.forEach(pipe => this.drawPipe(pipe))
+    }
+
+    drawPipe = (pipe) => {
+        const ctx = this.refs.canvas.getContext('2d')
+
+        ctx.fillStyle = 'green'
+        ctx.beginPath()
+        ctx.fillRect(pipe.x, pipe.y, pipe.w, pipe.h)
+        ctx.stroke()
+    }
 
     addPipeToState = () => {
+        const heights = [75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325]
+        const newHeight = heights[Math.floor(Math.random()*heights.length)]
+        const y = 650 - newHeight
         this.setState({
-            pipes: [...this.state.pipes, initialPipe]
+            pipes: [...this.state.pipes, {x:700, y: y, w: 40, h: newHeight}]
         })
     }
    
     updatePipeX = (pipe) => {   
         let newX = pipe.x - 1
-        return { x: newX, y: 400, w: 40, h: 250 }
+        return { x: newX, y: pipe.y, w: pipe.w, h: pipe.h}
     }
 
     movePipes = () => {
@@ -96,8 +93,15 @@ export default class Game extends React.Component{
         })
     }
     removePipes = () => {
-
+        const filtered = this.state.pipes.filter(pipe => pipe.x > -40)
+        this.setState({
+            pipes: filtered
+        })
     }
+
+    // gameOver = () => {
+    //     if(this.state.bird.x == this.state.pipe.x && this.state.bird.y == this.state.pipe)
+    // }
 
     componentDidMount(){
         setInterval(() => {
@@ -108,6 +112,7 @@ export default class Game extends React.Component{
         }, 1000/60)
         setInterval(() => {
             this.addPipeToState()
+            this.removePipes()
         }, 150000/60)
         document.addEventListener('keydown', e =>
         e.keyCode === 32 ? this.setState({
