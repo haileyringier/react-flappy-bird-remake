@@ -129,10 +129,6 @@ export default class Game extends React.Component{
 
     componentDidMount(){
         this.gameRunning()
-        // setInterval(() => {
-        //     this.addPipeToState()
-        //     this.removePipes()
-        // }, 150000/60)
         document.addEventListener('keydown', e =>
         e.keyCode === 32 ? this.setState({
             bird: {

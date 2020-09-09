@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import Game from './Game';
-import Bird from './Bird'
 
 export default class App extends React.Component {
   
