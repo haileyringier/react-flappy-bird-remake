@@ -1,5 +1,6 @@
 import React from 'react'              
 import StartButton from './components/StartButton'
+import Timer from './components/Timer'
 
 const initialPipe = {
             x: 700,
@@ -21,12 +22,13 @@ export default class Game extends React.Component{
             velocity: 0
         },
        pipes: [
-        {
-            x: initialPipe.x,
-            y: initialPipe.y,
-            w: initialPipe.w,
-            h: initialPipe.h
-        }
+           {
+               x: 550,
+               y: 475,
+               w: 40,
+               h: 150
+
+           }
        ]
     }
 
@@ -142,12 +144,15 @@ export default class Game extends React.Component{
 
     render(){
         return(
-            <div className='game-board'>
+           <body>
+            <div className='header-section'>
                 <StartButton clickAction={this.startButtonClick}/>
-                <div className='canvas-section'>
-                    <canvas ref='canvas' className='canvas' width={700} height={625} />      
-                </div>
+                <Timer />
             </div>
+                <div className='game-section'>
+                    <canvas ref='canvas' className='canvas' width={700} height={625} />      
+            </div>
+            </body>
         )
     }
 }

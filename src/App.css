@@ -13,5 +13,13 @@ h1{
   padding: 15px;
 }
 .start-button{
+  margin: 0px;
+  /* margin-right: 15px; */
+  
+}
+.header-section{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-evenly;
   margin-bottom: 15px;
 }
