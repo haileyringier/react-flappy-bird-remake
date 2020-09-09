@@ -1,4 +1,5 @@
 import React from 'react'              
+import StartButton from './components/StartButton'
 
 const initialPipe = {
             x: 700,
@@ -10,6 +11,7 @@ const initialPipe = {
 export default class Game extends React.Component{
 
     state = {
+        gameOn: false,
         gravity: 0.8, 
         lift: -15,  
         bird: {
@@ -102,18 +104,35 @@ export default class Game extends React.Component{
     // gameOver = () => {
     //     if(this.state.bird.x == this.state.pipe.x && this.state.bird.y == this.state.pipe)
     // }
-
-    componentDidMount(){
+    gameRunning = () => {
         setInterval(() => {
+            if(this.state.gameOn === true){
             this.draw()
             this.drawAllPipes()
             this.updateBird()       
             this.movePipes()
+            }
         }, 1000/60)
         setInterval(() => {
+            if(this.state.gameOn === true){
             this.addPipeToState()
             this.removePipes()
+            }
         }, 150000/60)
+    }
+    startButtonClick = () => {
+        this.setState({
+            gameOn: !this.state.gameOn
+        })
+        console.log(this.state.gameOn)
+    }
+
+    componentDidMount(){
+        this.gameRunning()
+        // setInterval(() => {
+        //     this.addPipeToState()
+        //     this.removePipes()
+        // }, 150000/60)
         document.addEventListener('keydown', e =>
         e.keyCode === 32 ? this.setState({
             bird: {
@@ -127,8 +146,11 @@ export default class Game extends React.Component{
 
     render(){
         return(
-            <div className='canvas-section'>
-                <canvas ref='canvas' className='canvas' width={700} height={625} />      
+            <div className='game-board'>
+                <StartButton clickAction={this.startButtonClick}/>
+                <div className='canvas-section'>
+                    <canvas ref='canvas' className='canvas' width={700} height={625} />      
+                </div>
             </div>
         )
     }
