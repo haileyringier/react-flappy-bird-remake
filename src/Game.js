@@ -1,12 +1,10 @@
 import React from 'react'              
 
 const initialPipe = {
-    pipe: {
             x: 700,
             y: 400,
             w: 40,
             h: 250,
-    }
 }
 
 export default class Game extends React.Component{
@@ -20,20 +18,20 @@ export default class Game extends React.Component{
             radius: 20,
             velocity: 0
         },
-       pipes: {
-           pipe1: {
-               x: 700,
-               y: 400,
-               w: 40,
-               h: 250
-           },
-           pipe2: {
-            x: 700,
-            y: 400,
-            w: 40,
-            h: 250
-           }
-       }
+       pipe: {
+        x: 700,
+        y: 400,
+        w: 40,
+        h: 250  
+       },
+       pipes: [
+        {
+            x: initialPipe.x,
+            y: initialPipe.y,
+            w: initialPipe.w,
+            h: initialPipe.h
+        }
+       ]
     }
 
     draw = () => {
@@ -46,23 +44,20 @@ export default class Game extends React.Component{
         const bird = document.createElement('img')
         bird.src = 'https://i.gifer.com/origin/39/3933c213d43ed004e381fefdb9ec0605_w200.gif'
         ctx.drawImage(bird, this.state.bird.x, this.state.bird.y, 100, 100)
-
-        ctx.fillStyle = 'green'        
-        ctx.fillRect(this.state.pipes.pipe1.x, this.state.pipes.pipe1.y, this.state.pipes.pipe1.w, this.state.pipes.pipe1.h)
-        
-        this.generatePipes()
     }                      
-            
-    generatePipes = () => {
-        const ctx = this.refs.canvas.getContext('2d')
 
-        ctx.fillStyle = 'green'        
-        const pipe = ctx.fillRect(initialPipe.pipe.x, initialPipe.pipe.y, initialPipe.pipe.w, initialPipe.pipe.h)
-        this.setState({
-            // pipes: [...this.state.pipes, pipe]
-        })
+    drawAllPipes = () => {
+        this.state.pipes.forEach(pipe => this.drawPipe(pipe))
     }
 
+    drawPipe = (pipe) => {
+        const ctx = this.refs.canvas.getContext('2d')
+
+        ctx.beginPath()
+        ctx.strokeStyle = 'green'
+        ctx.rect(pipe.x, pipe.y, pipe.w, pipe.h)
+        ctx.stroke()
+    }
 
     updateBird = () => {
         let newVelocity = (this.state.bird.velocity + this.state.gravity) * 0.9
@@ -81,30 +76,39 @@ export default class Game extends React.Component{
             }
         })
     }
-    movePipe = () => {   
-        let newX = this.state.pipes.pipe1.x - 1
+
+
+    addPipeToState = () => {
         this.setState({
-            pipes: {
-                pipe1: {
-                    x: newX,
-                    y: this.state.pipes.pipe1.y,
-                    w: this.state.pipes.pipe1.w,
-                    h: this.state.pipes.pipe1.h
-            }
-        }
+            pipes: [...this.state.pipes, initialPipe]
         })
+    }
+   
+    updatePipeX = (pipe) => {   
+        let newX = pipe.x - 1
+        return { x: newX, y: 400, w: 40, h: 250 }
+    }
+
+    movePipes = () => {
+        const updatedPipes = this.state.pipes.map(pipe => this.updatePipeX(pipe))
+        this.setState({
+            pipes: updatedPipes
+        })
+    }
+    removePipes = () => {
 
     }
 
     componentDidMount(){
         setInterval(() => {
-            this.updateBird()
             this.draw()
-            this.movePipe()
+            this.drawAllPipes()
+            this.updateBird()       
+            this.movePipes()
         }, 1000/60)
         setInterval(() => {
-            this.generatePipes()
-        }, 3000)
+            this.addPipeToState()
+        }, 150000/60)
         document.addEventListener('keydown', e =>
         e.keyCode === 32 ? this.setState({
             bird: {
