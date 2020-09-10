@@ -1,6 +1,7 @@
 import React from 'react'              
 import StartButton from './components/StartButton'
 import Timer from './components/Timer'
+import GameOverAlert from './components/GameOverAlert'
 
 // const initialPipe = {
 //             x: 700,
@@ -9,10 +10,20 @@ import Timer from './components/Timer'
 //             h: 150,
 // }
 
+const initialBird = {
+    x: 50,
+    y: 100,
+    radius: 20,
+    velocity: 0
+}
+
 export default class Game extends React.Component{
 
     state = {
         gameOn: false,
+        score: 0,
+        highScore: 0,
+        gameOverAlert: false, 
         gravity: 0.8, 
         lift: -15,  
         bird: {
@@ -26,7 +37,8 @@ export default class Game extends React.Component{
             x: 550,
             y: 475,
             w: 40,
-            h: 150
+            h: 150,
+            added: false
             }
         ]
     }
@@ -79,13 +91,13 @@ export default class Game extends React.Component{
         const newHeight = heights[Math.floor(Math.random()*heights.length)]
         const y = 650 - newHeight
         this.setState({
-            pipes: [...this.state.pipes, {x:700, y: y, w: 40, h: newHeight}]
+            pipes: [...this.state.pipes, {x:700, y: y, w: 40, h: newHeight, added: false}]
         })
     }
    
     updatePipeX = (pipe) => {   
         let newX = pipe.x - 1
-        return { x: newX, y: pipe.y, w: pipe.w, h: pipe.h}
+        return { x: newX, y: pipe.y, w: pipe.w, h: pipe.h, added: pipe.added}
     }
 
     movePipes = () => {
@@ -100,17 +112,27 @@ export default class Game extends React.Component{
             pipes: filtered
         })
     }
+    plusTen = () => {
+        let newScore = this.state.score + 10
+        this.setState({score: newScore})
+        if(newScore > this.state.highScore){
+            this.setState({highScore: newScore})
+        }
+    }
 
     gameOver = () => {
         this.state.pipes.forEach(pipe => {
-           if(this.state.bird.x + 50 > pipe.x - 20 && this.state.bird.x + 50 < pipe.x + 20 && this.state.bird.y + 50 >= 625 - pipe.h){
-            console.log("gameover") 
-            console.log("pipe:",pipe.x, pipe.y)
-            console.log(this.state.bird.x, this.state.bird.y)  
+            if(pipe.x === 50 && pipe.added === false){
+                this.plusTen()
+            }
+           if(this.state.bird.x + 50 > pipe.x - 20 && this.state.bird.x + 50 < pipe.x + 20 && this.state.bird.y + 50 >= 625 - pipe.h){  
             this.setState({gameOn: !this.state.gameOn})
             const ctx = this.refs.canvas.getContext('2d')
             ctx.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height)
-            this.setState({pipes: []})
+            this.setState({ pipes: [] })
+            this.setState({ bird: initialBird })
+            this.setState({gameOverAlert : true})
+            this.setState({score: 0})
            }
         })
     }
@@ -152,14 +174,19 @@ export default class Game extends React.Component{
         }) : null )
     }
 
+    dismissAlert = () => {
+        this.setState({gameOverAlert: false})
+    }
+
     render(){
         return(
            <>
             <div className='header-section'>
                 <StartButton clickAction={this.startButtonClick}/>
-                <Timer />
+                <Timer score={this.state.score} highScore={this.state.highScore}/>
             </div>
                 <div className='game-section'>
+                    {this.state.gameOverAlert ? <GameOverAlert dismiss={this.dismissAlert}/> : null}
                     <canvas ref='canvas' className='canvas' width={700} height={625} />      
             </div>
             </>

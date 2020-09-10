@@ -1,8 +1,11 @@
 import React from 'react'
 
-export default function Timer(){
+export default function Timer(props){
 
     return(
-        <p>Score:</p>
+        <>
+        <p>Score: {props.score}</p>
+        <p>High Score: {props.highScore}</p>
+        </>
     )
 }
