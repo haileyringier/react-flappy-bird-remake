@@ -186,7 +186,7 @@ export default class Game extends React.Component{
                 <Timer score={this.state.score} highScore={this.state.highScore}/>
             </div>
                 <div className='game-section'>
-                    {this.state.gameOverAlert ? <GameOverAlert dismiss={this.dismissAlert}/> : null}
+                    {this.state.gameOverAlert ? <GameOverAlert dismiss={this.dismissAlert} score={this.state.score}/> : null}
                     <canvas ref='canvas' className='canvas' width={700} height={625} />      
             </div>
             </>
