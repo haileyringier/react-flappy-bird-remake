@@ -95,7 +95,6 @@ export default class Game extends React.Component{
         const pipeImg = document.createElement('img')
         pipeImg.className = 'top'
         pipeImg.src = TopPipe
-        // pipeImg.src = "https://lh3.googleusercontent.com/proxy/zalBV957EjvwRiffZ-MYVd9jfXdjBTpu4vrbmUT5PtM86I0yyuRf5QHd0R9kEWT5-RCrpgT6Kx7WTbZvu7ISuhBUM-83Qw"
         ctx.drawImage(pipeImg, pipe.x, pipe.y, pipe.w, pipe.h)
     }
 
@@ -155,8 +154,7 @@ export default class Game extends React.Component{
                this.state.bird.x + 50 > pipe.x - 20 
                && this.state.bird.x <= pipe.x + 20 
                && this.state.bird.y + 50 >= 625 - pipe.h
-            //    && this.state.bird.x 
-               ){  
+            ){  
             this.setState({gameOn: !this.state.gameOn})
             const ctx = this.refs.canvas.getContext('2d')
             ctx.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height)

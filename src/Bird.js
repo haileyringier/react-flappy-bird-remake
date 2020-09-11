@@ -1,5 +1,7 @@
 import React from 'react'
 
+
+// currently not using the bird component but when I refactor plan on utilizing it then.
 export default function Bird(){
     
     const handleEvent = (event) => {
@@ -11,7 +13,6 @@ export default function Bird(){
     const jump = (event) => {
         let bird = event.target
         bird.style.position = 'relative'
-        // pos += 50
         console.log(pos)
         bird.style.bottom = (pos + 20) + 'px'
         pos += 20

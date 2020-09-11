@@ -6,7 +6,7 @@ export default function StartButton(props) {
         <button 
             className='start-button'
             onClick={props.clickAction}
-            >
+        >
         Start Game
         </button>
     )
