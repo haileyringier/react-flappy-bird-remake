@@ -69,3 +69,6 @@ ToastBody{
   font-weight: bold;
   background-color: orange;
 }
+.top{
+  transform:  rotate(180deg) translate(-100%, -100%);
+}

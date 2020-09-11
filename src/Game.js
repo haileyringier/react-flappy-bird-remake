@@ -2,17 +2,11 @@ import React from 'react'
 import StartButton from './components/StartButton'
 import Timer from './components/Timer'
 import GameOverAlert from './components/GameOverAlert'
-// import BirdImg from './components/BirdImg.jpg'
-
-// const initialPipe = {
-//             x: 700,
-//             y: 475,
-//             w: 40,
-//             h: 150,
-// }
+import BotPipe from './components/BotPipe.png'
+import TopPipe from './components/TopPipe.png'
 
 const initialBird = {
-    x: 50,
+    x: 150,
     y: 100,
     radius: 20,
     velocity: 0
@@ -28,12 +22,12 @@ export default class Game extends React.Component{
         gravity: 0.8, 
         lift: -15,  
         bird: {
-            x: 50,
+            x: 150,
             y: 100,
             radius: 20,
             velocity: 0
         },
-       pipes: [
+       bottomPipes: [
             {
             x: 550,
             y: 475,
@@ -41,22 +35,26 @@ export default class Game extends React.Component{
             h: 150,
             added: false
             }
+        ],
+        topPipes: [
+            {
+                x: 550,
+                y: 0,
+                w: 40,
+                h: 300
+            }
         ]
     }
 
     draw = () => {
         const ctx = this.refs.canvas.getContext('2d')
-
-        // ctx.fillStyle = "white"
-        // ctx.fillRect(0, 0, this.refs.canvas.width,
-        //     this.refs.canvas.height) 
+ 
         const background = document.createElement('img')
         background.src = 'http://sfwallpaper.com/images/flappy-bird-background-5.jpg'
-            ctx.drawImage(background, 0, 0, this.refs.canvas.width, this.refs.canvas.height) 
+        ctx.drawImage(background, 0, 0, this.refs.canvas.width, this.refs.canvas.height) 
         
         const bird = document.createElement('img')
         bird.src = 'https://i.gifer.com/origin/39/3933c213d43ed004e381fefdb9ec0605_w200.gif'
-        // bird.src = "https://t6.rbxcdn.com/19bf13af068abe2f8630dafe16e1637f"
         ctx.drawImage(bird, this.state.bird.x, this.state.bird.y, 100, 100)
     }   
     
@@ -64,7 +62,7 @@ export default class Game extends React.Component{
         let newVelocity = (this.state.bird.velocity + this.state.gravity) * 0.9
         this.setState({
             bird: {
-                x: 50,
+                x: 150,
                 y: Math.max(
                     Math.min(
                         this.state.bird.y + newVelocity,
@@ -79,47 +77,66 @@ export default class Game extends React.Component{
     }
 
     drawAllPipes = () => {
-        this.state.pipes.forEach(pipe => this.drawPipe(pipe))
+        this.state.bottomPipes.forEach(pipe => this.drawPipe(pipe))
+        this.state.topPipes.forEach(pipe => this.drawTopPipe(pipe))
     }
 
     drawPipe = (pipe) => {
         const ctx = this.refs.canvas.getContext('2d')
 
-        // ctx.fillStyle = 'green'
-        // ctx.beginPath()
-        // ctx.fillRect(pipe.x, pipe.y, pipe.w, pipe.h)
-        // ctx.stroke()
+        const pipeImg = document.createElement('img')
+        pipeImg.src = BotPipe
+        
+        ctx.drawImage(pipeImg, pipe.x, pipe.y, pipe.w, pipe.h)
+    }
+    drawTopPipe = (pipe) => {
+        const ctx = this.refs.canvas.getContext('2d')
 
         const pipeImg = document.createElement('img')
-        pipeImg.src = "https://lh3.googleusercontent.com/proxy/41awhc02T7_Lm2o1paVQLWQXt0w7IGb0p3GLs4QdZJtAmk3foL5a1aIZ0i01Ejlh53Ol6EJoPW_rsFHjpZ0ajq5VEjamCu4B"
+        pipeImg.className = 'top'
+        pipeImg.src = TopPipe
+        // pipeImg.src = "https://lh3.googleusercontent.com/proxy/zalBV957EjvwRiffZ-MYVd9jfXdjBTpu4vrbmUT5PtM86I0yyuRf5QHd0R9kEWT5-RCrpgT6Kx7WTbZvu7ISuhBUM-83Qw"
         ctx.drawImage(pipeImg, pipe.x, pipe.y, pipe.w, pipe.h)
     }
 
-    addPipeToState = () => {
-        const heights = [75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325]
+    addPipesToState = () => {
+        const heights = [75, 100, 125, 150, 175, 200, 225, 250, 275, 300]
         const newHeight = heights[Math.floor(Math.random()*heights.length)]
         const y = 650 - newHeight
         this.setState({
-            pipes: [...this.state.pipes, {x:700, y: y, w: 40, h: newHeight, added: false}]
+            bottomPipes: [...this.state.bottomPipes, {x:700, y: y, w: 40, h: newHeight, added: false}]
+        })
+        this.setState({
+            topPipes: [...this.state.topPipes, {x:700, y: 0, w: 40, h: 400 - newHeight}]
         })
     }
    
-    updatePipeX = (pipe) => {   
+    updateBottomPipeX = (pipe) => {   
         let newX = pipe.x - 1
         return { x: newX, y: pipe.y, w: pipe.w, h: pipe.h, added: pipe.added}
     }
+    updateTopPipeX = (pipe) => {   
+        let newX = pipe.x - 1
+        return { x: newX, y: pipe.y, w: pipe.w, h: pipe.h}
+    }
 
     movePipes = () => {
-        const updatedPipes = this.state.pipes.map(pipe => this.updatePipeX(pipe))
+        const updatedPipes = this.state.bottomPipes.map(pipe => this.updateBottomPipeX(pipe))
         this.setState({
-            pipes: updatedPipes
+            bottomPipes: updatedPipes
+        })
+        const updatedTopPipes = this.state.topPipes.map(pipe => this.updateTopPipeX(pipe))
+        this.setState({
+            topPipes: updatedTopPipes
         })
     }
     removePipes = () => {
-        const filtered = this.state.pipes.filter(pipe => pipe.x > -40)
+        const filtered = this.state.bottomPipes.filter(pipe => pipe.x > -40)
         this.setState({
-            pipes: filtered
+            bottomPipes: filtered
         })
+        const topFiltered = this.state.topPipes.filter(pipe => pipe.x > -40)
+        this.setState({ topPipes: topFiltered})
     }
     plusTen = () => {
         let newScore = this.state.score + 10
@@ -130,17 +147,23 @@ export default class Game extends React.Component{
     }
 
     gameOver = () => {
-        this.state.pipes.forEach(pipe => {
-            if(pipe.x === 50 && pipe.added === false){
+        this.state.bottomPipes.forEach(pipe => {
+            if(pipe.x === 150 && pipe.added === false){
                 this.plusTen()
             }
-           if(this.state.bird.x + 50 > pipe.x - 20 && this.state.bird.x + 50 < pipe.x + 20 && this.state.bird.y + 50 >= 625 - pipe.h){  
+           if(
+               this.state.bird.x + 50 > pipe.x - 20 
+               && this.state.bird.x <= pipe.x + 20 
+               && this.state.bird.y + 50 >= 625 - pipe.h
+            //    && this.state.bird.x 
+               ){  
             this.setState({gameOn: !this.state.gameOn})
             const ctx = this.refs.canvas.getContext('2d')
             ctx.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height)
-            this.setState({ pipes: [] })
+            this.setState({ bottomPipes: [] })
+            this.setState({ topPipes: [] })
             this.setState({ bird: initialBird })
-            this.setState({gameOverAlert : true})
+            this.setState({ gameOverAlert : true })
            }
         })
     }
@@ -157,7 +180,7 @@ export default class Game extends React.Component{
         }, 1000/60)
         setInterval(() => {
             if(this.state.gameOn === true){
-            this.addPipeToState()
+            this.addPipesToState()
             this.removePipes()
             }
         }, 150000/60)
@@ -171,7 +194,7 @@ export default class Game extends React.Component{
         document.addEventListener('keydown', e =>
         e.keyCode === 32 ? this.setState({
             bird: {
-                x: 50,
+                x: 150,
                 y: this.state.bird.y,
                 radius: 20,
                 velocity: this.state.bird.velocity + this.state.lift
