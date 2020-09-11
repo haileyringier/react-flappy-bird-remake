@@ -17,10 +17,10 @@ export default function GameOverAlert(props) {
                     <small>Try again</small>
                 </ToastHeader> */}
                 <ToastBody>
-                    <strong className="mr-auto">NICE TRY!</strong>
-                    <strong className="mr-auto">Your Score: {props.score}</strong>
-                    <small>Try again</small>
-                    <button type="button" onClick={props.dismiss}><span aria-hidden="true">×</span><span>Close</span></button>
+                    <strong className="alert-text">NICE TRY!</strong>
+                    <strong className="alert-text">Your Score: {props.score}</strong>
+                    {/* <small className="small-alert-text">Try again</small> */}
+                    <button type="button" className="close-button" onClick={props.dismiss}><span aria-hidden="true">×</span><span>Close</span></button>
                 </ToastBody>
             </Toast>
         </div>

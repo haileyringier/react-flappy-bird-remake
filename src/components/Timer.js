@@ -4,8 +4,8 @@ export default function Timer(props){
 
     return(
         <>
-        <p>Score: {props.score}</p>
-        <p>High Score: {props.highScore}</p>
+        <p className="score-section">Score: {props.score}</p>
+        <p className="score-section">High Score: {props.highScore}</p>
         </>
     )
 }

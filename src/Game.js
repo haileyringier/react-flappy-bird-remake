@@ -2,6 +2,7 @@ import React from 'react'
 import StartButton from './components/StartButton'
 import Timer from './components/Timer'
 import GameOverAlert from './components/GameOverAlert'
+// import BirdImg from './components/BirdImg.jpg'
 
 // const initialPipe = {
 //             x: 700,
@@ -46,12 +47,16 @@ export default class Game extends React.Component{
     draw = () => {
         const ctx = this.refs.canvas.getContext('2d')
 
-        ctx.fillStyle = "white"
-        ctx.fillRect(0, 0, this.refs.canvas.width,
-            this.refs.canvas.height)  
+        // ctx.fillStyle = "white"
+        // ctx.fillRect(0, 0, this.refs.canvas.width,
+        //     this.refs.canvas.height) 
+        const background = document.createElement('img')
+        background.src = 'http://sfwallpaper.com/images/flappy-bird-background-5.jpg'
+            ctx.drawImage(background, 0, 0, this.refs.canvas.width, this.refs.canvas.height) 
         
         const bird = document.createElement('img')
         bird.src = 'https://i.gifer.com/origin/39/3933c213d43ed004e381fefdb9ec0605_w200.gif'
+        // bird.src = "https://t6.rbxcdn.com/19bf13af068abe2f8630dafe16e1637f"
         ctx.drawImage(bird, this.state.bird.x, this.state.bird.y, 100, 100)
     }   
     
@@ -80,10 +85,14 @@ export default class Game extends React.Component{
     drawPipe = (pipe) => {
         const ctx = this.refs.canvas.getContext('2d')
 
-        ctx.fillStyle = 'green'
-        ctx.beginPath()
-        ctx.fillRect(pipe.x, pipe.y, pipe.w, pipe.h)
-        ctx.stroke()
+        // ctx.fillStyle = 'green'
+        // ctx.beginPath()
+        // ctx.fillRect(pipe.x, pipe.y, pipe.w, pipe.h)
+        // ctx.stroke()
+
+        const pipeImg = document.createElement('img')
+        pipeImg.src = "https://lh3.googleusercontent.com/proxy/41awhc02T7_Lm2o1paVQLWQXt0w7IGb0p3GLs4QdZJtAmk3foL5a1aIZ0i01Ejlh53Ol6EJoPW_rsFHjpZ0ajq5VEjamCu4B"
+        ctx.drawImage(pipeImg, pipe.x, pipe.y, pipe.w, pipe.h)
     }
 
     addPipeToState = () => {
@@ -132,7 +141,6 @@ export default class Game extends React.Component{
             this.setState({ pipes: [] })
             this.setState({ bird: initialBird })
             this.setState({gameOverAlert : true})
-            this.setState({score: 0})
            }
         })
     }
@@ -155,10 +163,7 @@ export default class Game extends React.Component{
         }, 150000/60)
     }
     startButtonClick = () => {
-        this.setState({
-            gameOn: !this.state.gameOn
-        })
-        console.log(this.state.gameOn)
+        this.setState({gameOn: !this.state.gameOn})
     }
 
     componentDidMount(){
@@ -176,6 +181,7 @@ export default class Game extends React.Component{
 
     dismissAlert = () => {
         this.setState({gameOverAlert: false})
+        this.setState({score: 0})
     }
 
     render(){
